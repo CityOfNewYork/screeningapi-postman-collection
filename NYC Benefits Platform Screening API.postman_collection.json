@@ -1,0 +1,270 @@
+{
+	"info": {
+		"_postman_id": "f6673713-0be2-4f41-9bd7-1ad5fa85b81e",
+		"name": "NYC Benefits Platform Screening API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Eligibility",
+			"item": [
+				{
+					"name": "Bulk Submission / Import",
+					"item": [
+						{
+							"name": "Basic Request",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "",
+											"type": "file",
+											"src": ""
+										}
+									]
+								},
+								"url": {
+									"raw": "https://{{domain}}/bulkSubmission/import",
+									"protocol": "https",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"bulkSubmission",
+										"import"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Filtered Request",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "",
+											"type": "file",
+											"src": ""
+										}
+									]
+								},
+								"url": {
+									"raw": "https://{{domain}}/bulkSubmission/import?interestedPrograms={{interested_programs}}",
+									"protocol": "https",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"bulkSubmission",
+										"import"
+									],
+									"query": [
+										{
+											"key": "interestedPrograms",
+											"value": "{{interested_programs}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Eligibility Programs",
+					"item": [
+						{
+							"name": "Basic Request",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[{\n\t\"household\": [{\n\t\t\"cashOnHand\": \"50000\",\n\t\t\"livingRentalType\": \"RentControlled\",\n\t\t\"livingRenting\": \"true\",\n\t\t\"livingOwner\": \"false\",\n\t\t\"livingStayingWithFriend\": \"false\",\n\t\t\"livingHotel\": \"false\",\n\t\t\"livingShelter\": \"false\",\n\t\t\"livingPreferNotToSay\": \"false\"\n\t}],\n\t\"person\": [{\n\t\t\"age\": \"35\",\n\t\t\"incomes\": [{\n\t\t\t\"amount\": \"200\",\n\t\t\t\"type\": \"Veteran\",\n\t\t\t\"frequency\": \"Monthly\"\n\t\t}],\n\t\t\"expenses\": [{\n\t\t\t\"amount\": \"50\",\n\t\t\t\"type\": \"Medical\",\n\t\t\t\"frequency\": \"Weekly\"\n\t\t}],\n\t\t\"student\": \"false\",\n\t\t\"studentFulltime\": \"false\",\n\t\t\"pregnant\": \"false\",\n\t\t\"unemployed\": \"false\",\n\t\t\"unemployedWorkedLast18Months\": \"false\",\n\t\t\"blind\": \"false\",\n\t\t\"disabled\": \"false\",\n\t\t\"veteran\": \"true\",\n\t\t\"benefitsMedicaid\": \"false\",\n\t\t\"benefitsMedicaidDisability\": \"false\",\n\t\t\"householdMemberType\": \"HeadOfHousehold\",\n\t\t\"livingOwnerOnDeed\": \"false\",\n\t\t\"livingRentalOnLease\": \"true\"\n\t}],\n\t\"withholdPayload\": \"false\"\n}]"
+								},
+								"url": {
+									"raw": "https://{{domain}}/eligibilityPrograms",
+									"protocol": "https",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"eligibilityPrograms"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "This group contains tests for the Eligibility Programs (single request) endpoint. Authorization is managed by the Pre-request Script setting the appropriate environment variables for {{username}} and {{token}}. ",
+					"_postman_isSubFolder": true
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6e7c5a59-c4b1-46ff-a80a-d6e3108f289c",
+						"type": "text/javascript",
+						"exec": [
+							"const authTokenRequest = {",
+							"  url: 'https://' + pm.environment.get('domain') + '/authToken',",
+							"  method: 'POST',",
+							"  header: 'Content-Type:application/json',",
+							"  body: {",
+							"    mode: 'application/json',",
+							"    raw: JSON.stringify({",
+							"      username: pm.environment.get('username'),",
+							"      password: pm.environment.get('password')",
+							"    })",
+							"  }",
+							"};",
+							"",
+							"pm.sendRequest(authTokenRequest, function (err, res) {",
+							"  console.log(err ? err : res.json());",
+							"    ",
+							"  if (err === null) {",
+							"    var response = res.json();",
+							"        ",
+							"    pm.environment.set('token', response.token)",
+							"  }",
+							"});"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Auth Token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\" : \"{{username}}\",\r\n  \"newPassword\": \"{{new_password}}\"\r\n}"
+				},
+				"url": {
+					"raw": "https://{{domain}}/authToken",
+					"protocol": "https",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"authToken"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forgot Password",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\" : \"{{username}}\"\r\n}"
+				},
+				"url": {
+					"raw": "https://{{domain}}/forgotPassword",
+					"protocol": "https",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"forgotPassword"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm Password",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"{{username}}\",\n  \"verificationCode\": \"{{verification_code}}\",\n  \"newPassword\": \"{{new_password}}\"\n}"
+				},
+				"url": {
+					"raw": "https://{{domain}}/confirmPassword",
+					"protocol": "https",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"confirmPassword"
+					]
+				},
+				"description": "example curl to reset password with verification code recieved via email."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "2b2546da-b74d-48d1-870c-338d98334d43",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "7abe0393-0465-4873-baab-2422e8c68ea1",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
