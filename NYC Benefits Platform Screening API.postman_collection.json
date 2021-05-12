@@ -173,7 +173,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"username\" : \"{{username}}\",\r\n  \"newPassword\": \"{{new_password}}\"\r\n}"
+					"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\"\r\n}"
 				},
 				"url": {
 					"raw": "https://{{domain}}/authToken",
